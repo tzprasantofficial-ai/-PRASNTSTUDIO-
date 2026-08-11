@@ -410,12 +410,24 @@ function freshWz(){
     color:null, tshirtStyle:null, graphicsMode:null, graphicsFile:null, graphicsNote:'',
     mood:null, scene:null, character:null, themeNote:'', promptText:'', resultImage:null,
     captionMode:null, caption:null,
-    postImage:null, postImagePreview:null, postText:'' };
+    postImage:null, postImagePreview:null, postText:'',
+    videoSource:null, videoStartFile:null, videoStartPreview:null, videoEndFile:null, videoEndPreview:null,
+    videoImageFile:null, videoImagePreview:null, videoNote:'', videoMode:null, videoScript:'',
+    videoResultFile:null, videoResultPreview:null,
+    scriptNote:'', scriptLength:null, scriptTone:null, scriptCharCount:1, scriptCharacters:[],
+    scriptMode:null, scriptResultText:'' };
 }
 
 const COLORS = ["Black","White","Navy Blue","Cream","Gray","Light Gray","Maroon","Dark Green","Baby Pink","Pink"];
 const COLOR_SWATCH = {"Black":"#1a1a1a","White":"#f5f5f0","Navy Blue":"#1b2a4a","Cream":"#EFE6D2","Gray":"#8a8a8a","Light Gray":"#c9c9c9","Maroon":"#6e1f2a","Dark Green":"#1f3d2b","Baby Pink":"#f4c2ce","Pink":"#e8558f"};
 const TSHIRT_STYLES = ["Polyester","Polo","Hoodie","Cotton Tight Fit","Cotton Loose Fit","Cotton Loose Fit Thick"];
+const VIDEO_SOURCES = [
+  {id:'2photo', name:'2-Photo Video', desc:'Upload a start + end photo, describe the motion between them'},
+  {id:'text', name:'Text to Video', desc:'Write your own script, we refine it into a flowing one'},
+  {id:'image', name:'Image to Video', desc:'Upload one photo and bring it to life'}
+];
+const SCRIPT_LENGTHS = ["15 sec","30 sec","60 sec","90 sec"];
+const SCRIPT_TONES = ["Fun & Playful","Professional","Emotional","Bold & Energetic","Warm & Personal"];
 
 function getSteps(){
   if(wz.contentType === 'Post'){
@@ -424,6 +436,23 @@ function getSteps(){
       {key:'mood', label:'Mood'}, {key:'product', label:'Item'}, {key:'prompt', label:'Prompt'},
       {key:'post-result', label:'Post Text'}, {key:'publish', label:'Publish'}
     ];
+  }
+  if(wz.contentType === 'Video' || wz.contentType === 'Reels'){
+    return [
+      {key:'type', label:'Type'}, {key:'platform', label:'Platform'}, {key:'video-source', label:'Source'},
+      {key:'product', label:'Product'}, {key:'refs', label:'Reference'}, {key:'character', label:'Character'},
+      {key:'scene', label:'Scenario'}, {key:'theme', label:'Direction'}, {key:'prompt', label:'Prompt'},
+      {key:'video-upload', label:'Result'}, {key:'caption', label:'Caption'}, {key:'publish', label:'Publish'}
+    ];
+  }
+  if(wz.contentType === 'Script' || wz.contentType === 'Say Your Story'){
+    const s = [{key:'type', label:'Type'}, {key:'script-note', label:'Brief'}, {key:'script-details', label:'Length'}];
+    if(wz.contentType === 'Script'){ s.push({key:'script-characters', label:'Characters'}); }
+    s.push(
+      {key:'script-mode', label:'Direction'}, {key:'prompt', label:'Prompt'},
+      {key:'script-result', label:'Script'}
+    );
+    return s;
   }
   const s = [
     {key:'type', label:'Type'}, {key:'platform', label:'Platform'}, {key:'product', label:'Product'}
@@ -466,6 +495,10 @@ function optCard(label, meta, selected, onclick){
   </button>`;
 }
 function setField(field, value){ wz[field] = value; renderWizard(); }
+function syncPrimaryBtn(disabled){
+  const btn = document.querySelector('.step-actions .btn.primary');
+  if(btn) btn.disabled = !!disabled;
+}
 function togglePlatform(name){
   const i = wz.platforms.indexOf(name);
   if(i === -1) wz.platforms.push(name); else wz.platforms.splice(i,1);
@@ -479,10 +512,10 @@ function renderWizard(){
   let html = '';
 
   if(key === 'type'){
-    const types = [{n:'Photo', ready:true},{n:'Post', ready:true},{n:'Video', ready:false},{n:'Reels', ready:false},{n:'Script', ready:false},{n:'Say Your Story', ready:false}];
+    const types = [{n:'Photo', ready:true},{n:'Post', ready:true},{n:'Video', ready:true},{n:'Reels', ready:true},{n:'Script', ready:true},{n:'Say Your Story', ready:true}];
     html = `<div class="step-eyebrow mono">${stepLabel()}</div>
       <div class="step-title display">What are we making?</div>
-      <div class="step-sub">Photo and Post are fully wired up. Video, Reels and Script are next — same engine, built out one at a time.</div>
+      <div class="step-sub">All six are live now.</div>
       <div class="opt-grid cols-3">
         ${types.map(t => `<button class="opt-card ${wz.contentType===t.n?'selected':''} ${!t.ready?'disabled':''}" ${t.ready ? `onclick="setField('contentType','${t.n}')"` : 'disabled'}>
           <div class="oc-name">${t.n}</div><div class="oc-meta">${t.ready ? 'Ready' : 'Coming next'}</div>
@@ -554,7 +587,7 @@ function renderWizard(){
         </button>
       </div>
 
-      ${wz.graphicsMode === 'describe' ? `<textarea class="free-input" placeholder="e.g. minimal mountain line-art with 'ADVENTURE' text above it" oninput="wz.graphicsNote=this.value">${wz.graphicsNote}</textarea>` : ''}
+      ${wz.graphicsMode === 'describe' ? `<textarea class="free-input" placeholder="e.g. minimal mountain line-art with 'ADVENTURE' text above it" oninput="wz.graphicsNote=this.value; syncPrimaryBtn(!this.value.trim());">${wz.graphicsNote}</textarea>` : ''}
 
       ${footer(!wz.graphicsMode || (wz.graphicsMode==='upload' && !wz.graphicsFile) || (wz.graphicsMode==='describe' && !wz.graphicsNote.trim()))}`;
   }
@@ -593,6 +626,48 @@ function renderWizard(){
       <div style="margin-top:12px;"><button class="btn" onclick="wz.themeNote='Surprise me with a creative direction that fits the mood and scene.'; renderWizard();">✨ Amaze Me</button></div>
       ${footer(false)}`;
   }
+  else if(key === 'video-source'){
+    html = renderVideoSourceStep();
+  }
+  else if(key === 'video-upload'){
+    html = renderVideoUploadStep();
+  }
+  else if(key === 'script-note'){
+    html = `<div class="step-eyebrow mono">${stepLabel()}</div>
+      <div class="step-title display">${wz.contentType === 'Say Your Story' ? "What's the story?" : 'What\'s this script about?'}</div>
+      <div class="step-sub">A short note is enough — Gemini will turn it into a full, detailed script.</div>
+      <textarea class="free-input" style="min-height:140px;" placeholder="${wz.contentType === 'Say Your Story' ? 'e.g. how U-Design started, the mall changing room moment, the first sale...' : 'e.g. a quick ad for our new hoodie drop, playful tone, ends with a WhatsApp CTA'}" oninput="wz.scriptNote=this.value; syncPrimaryBtn(!this.value.trim());">${wz.scriptNote}</textarea>
+      ${footer(!wz.scriptNote.trim())}`;
+  }
+  else if(key === 'script-details'){
+    html = `<div class="step-eyebrow mono">${stepLabel()}</div>
+      <div class="step-title display">Length &amp; tone</div>
+      <div class="mono" style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin:6px 0 10px;">Length</div>
+      <div class="opt-grid cols-3">${SCRIPT_LENGTHS.map(l => optCard(l, '', wz.scriptLength===l, `setField('scriptLength','${l}')`)).join('')}</div>
+      <div class="mono" style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin:26px 0 10px;">Tone</div>
+      <div class="opt-grid">${SCRIPT_TONES.map(t => optCard(t, '', wz.scriptTone===t, `setField('scriptTone','${t}')`)).join('')}</div>
+      ${footer(!wz.scriptLength || !wz.scriptTone)}`;
+  }
+  else if(key === 'script-characters'){
+    html = renderScriptCharactersStep();
+  }
+  else if(key === 'script-mode'){
+    html = `<div class="step-eyebrow mono">${stepLabel()}</div>
+      <div class="step-title display">Creative direction</div>
+      <div class="step-sub">${wz.contentType==='Script' && wz.scriptCharacters.length ? 'Apply this direction to every character, or let Gemini decide.' : 'Optional extra direction for the writer.'}</div>
+      <div class="opt-grid" style="grid-template-columns:1fr 1fr;">
+        <button class="opt-card ${wz.scriptMode==='all'?'selected':''}" onclick="setField('scriptMode','all')">
+          <span class="oc-check">✓</span><div class="oc-name">Do it for all</div><div class="oc-meta">Same direction applies throughout</div>
+        </button>
+        <button class="opt-card ${wz.scriptMode==='amaze'?'selected':''}" onclick="setField('scriptMode','amaze')">
+          <span class="oc-check">✓</span><div class="oc-name">✨ Amaze me</div><div class="oc-meta">Gemini decides the direction</div>
+        </button>
+      </div>
+      ${footer(!wz.scriptMode)}`;
+  }
+  else if(key === 'script-result'){
+    html = renderScriptResultStep();
+  }
   else if(key === 'prompt'){ html = renderPromptStep(); }
   else if(key === 'upload'){ html = renderUploadStep(); }
   else if(key === 'post-result'){ html = renderPostResultStep(); }
@@ -626,6 +701,125 @@ function handlePostImageUpload(file){
   const reader = new FileReader();
   reader.onload = e => { wz.postImagePreview = e.target.result; renderWizard(); };
   reader.readAsDataURL(file);
+}
+
+/* ---- Video source step ---- */
+function renderVideoSourceStep(){
+  const algoNote = wz.contentType === 'Reels' ? `<div class="note-box" style="margin-bottom:20px;">Reels-specific: the prompt will lean into hook-in-first-2-seconds pacing, trend-aware cuts and vertical framing.</div>` : '';
+  let sub = '';
+  if(wz.videoSource === '2photo'){
+    sub = `
+      <div class="mono" style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin:22px 0 10px;">Start &amp; end photos</div>
+      <div class="upload-row">
+        <label class="upload-slot" style="width:110px; height:110px; ${wz.videoStartPreview ? `background-image:url('${wz.videoStartPreview}'); border-style:solid; border-color:var(--cyan);` : ''}">
+          ${wz.videoStartPreview ? '<div class="fname">Start</div>' : '+ Start'}
+          <input type="file" accept="image/*" onchange="handleVideoFile('videoStartFile','videoStartPreview', this.files[0])">
+        </label>
+        <label class="upload-slot" style="width:110px; height:110px; ${wz.videoEndPreview ? `background-image:url('${wz.videoEndPreview}'); border-style:solid; border-color:var(--cyan);` : ''}">
+          ${wz.videoEndPreview ? '<div class="fname">End</div>' : '+ End'}
+          <input type="file" accept="image/*" onchange="handleVideoFile('videoEndFile','videoEndPreview', this.files[0])">
+        </label>
+      </div>
+      <div class="mono" style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin:24px 0 10px;">Motion / direction</div>
+      <textarea class="free-input" placeholder="e.g. slow zoom from the plain mug to the finished printed one" oninput="wz.videoNote=this.value; wz.videoMode = this.value.trim() ? 'write' : wz.videoMode; syncPrimaryBtn(!videoSourceReady());">${wz.videoNote}</textarea>
+      <div style="margin-top:10px;"><button class="btn ${wz.videoMode==='amaze'?'primary':''}" onclick="wz.videoMode='amaze'; renderWizard();">✨ Amaze me instead</button></div>`;
+  } else if(wz.videoSource === 'text'){
+    sub = `
+      <div class="mono" style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin:22px 0 10px;">Your script</div>
+      <textarea class="free-input" style="min-height:160px;" placeholder="Write it rough - we'll refine it into a flowing, professional script" oninput="wz.videoScript=this.value; syncPrimaryBtn(!this.value.trim());">${wz.videoScript}</textarea>`;
+  } else if(wz.videoSource === 'image'){
+    sub = `
+      <div class="mono" style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin:22px 0 10px;">Photo to animate</div>
+      <label class="upload-slot" style="width:110px; height:110px; ${wz.videoImagePreview ? `background-image:url('${wz.videoImagePreview}'); border-style:solid; border-color:var(--cyan);` : ''}">
+        ${wz.videoImagePreview ? '<div class="fname">Added</div>' : '+ Upload'}
+        <input type="file" accept="image/*" onchange="handleVideoFile('videoImageFile','videoImagePreview', this.files[0])">
+      </label>
+      <div class="mono" style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin:24px 0 10px;">Motion / direction</div>
+      <textarea class="free-input" placeholder="e.g. gentle parallax push-in, product slowly rotating" oninput="wz.videoNote=this.value; wz.videoMode = this.value.trim() ? 'write' : wz.videoMode; syncPrimaryBtn(!videoSourceReady());">${wz.videoNote}</textarea>
+      <div style="margin-top:10px;"><button class="btn ${wz.videoMode==='amaze'?'primary':''}" onclick="wz.videoMode='amaze'; renderWizard();">✨ Amaze me instead</button></div>`;
+  }
+
+  return `<div class="step-eyebrow mono">${stepLabel()}</div>
+    <div class="step-title display">What kind of video?</div>
+    <div class="step-sub">Pick a source, then fill in what it needs.</div>
+    ${algoNote}
+    <div class="opt-grid">
+      ${VIDEO_SOURCES.map(v => `<button class="opt-card ${wz.videoSource===v.id?'selected':''}" onclick="setField('videoSource','${v.id}')">
+        <span class="oc-check">✓</span><div class="oc-name">${v.name}</div><div class="oc-meta">${v.desc}</div>
+      </button>`).join('')}
+    </div>
+    ${sub}
+    ${footer(!videoSourceReady())}`;
+}
+function videoSourceReady(){
+  if(wz.videoSource === '2photo') return !!wz.videoStartFile && !!wz.videoEndFile && (!!wz.videoNote.trim() || wz.videoMode === 'amaze');
+  if(wz.videoSource === 'text') return !!wz.videoScript.trim();
+  if(wz.videoSource === 'image') return !!wz.videoImageFile && (!!wz.videoNote.trim() || wz.videoMode === 'amaze');
+  return false;
+}
+function handleVideoFile(fileField, previewField, file){
+  if(!file) return;
+  wz[fileField] = file;
+  const reader = new FileReader();
+  reader.onload = e => { wz[previewField] = e.target.result; renderWizard(); };
+  reader.readAsDataURL(file);
+}
+
+/* ---- Video result upload ---- */
+function renderVideoUploadStep(){
+  const preview = wz.videoResultPreview
+    ? `<video controls style="width:100%; max-width:320px; border-radius:2px; border:1px solid var(--line);" src="${wz.videoResultPreview}"></video>`
+    : `<label class="upload-drop">Click to upload the video Gemini/Veo gave you<input type="file" accept="video/*" onchange="handleVideoResultUpload(this.files[0])"></label>`;
+  return `<div class="step-eyebrow mono">${stepLabel()}</div>
+    <div class="step-title display">Bring your video back</div>
+    <div class="step-sub">Drop in the finished video so we can carry on with the caption and publish steps.</div>
+    ${preview}
+    ${wz.videoResultPreview ? `<div style="margin-top:14px; text-align:center;"><label class="btn" style="display:inline-block;">Replace video<input type="file" accept="video/*" style="display:none" onchange="handleVideoResultUpload(this.files[0])"></label></div>` : ''}
+    ${footer(!wz.videoResultFile)}`;
+}
+function handleVideoResultUpload(file){
+  if(!file) return;
+  wz.videoResultFile = file;
+  const reader = new FileReader();
+  reader.onload = e => { wz.videoResultPreview = e.target.result; renderWizard(); };
+  reader.readAsDataURL(file);
+}
+
+/* ---- Script characters step ---- */
+function renderScriptCharactersStep(){
+  const count = wz.scriptCharacters.length;
+  return `<div class="step-eyebrow mono">${stepLabel()}</div>
+    <div class="step-title display">Who's in it?</div>
+    <div class="step-sub">Pick how many characters, then assign and name each one.</div>
+    <div class="opt-grid cols-3">
+      ${[1,2,3,4].map(n => `<button class="opt-card ${count===n?'selected':''}" onclick="setScriptCharCount(${n})">
+        <span class="oc-check">✓</span><div class="oc-name">${n} character${n>1?'s':''}</div>
+      </button>`).join('')}
+    </div>
+    <div style="margin-top:24px; display:flex; flex-direction:column; gap:14px;">
+      ${wz.scriptCharacters.map((c, i) => `
+        <div style="border:1px solid var(--line); border-radius:2px; padding:14px; background:var(--ink-1);">
+          <div class="mono" style="font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--cyan); margin-bottom:10px;">Character ${i+1}</div>
+          <div class="char-grid" style="margin-bottom:10px;">
+            ${MODELS.map(m => `<div class="char-slot ${c.modelId===m.id?'selected':''}" style="background-image:url('${m.thumb}'); aspect-ratio:1/1;" onclick="setScriptCharModel(${i},'${m.id}')">
+              <div class="char-label" style="font-size:9px;">${m.name}</div>
+            </div>`).join('')}
+          </div>
+          <input class="free-input" style="margin-top:0;" placeholder="Name this character for the story (e.g. Zara)" value="${c.name}" oninput="setScriptCharName(${i}, this.value)">
+        </div>`).join('')}
+    </div>
+    ${footer(wz.scriptCharacters.length===0 || wz.scriptCharacters.some(c => !c.modelId || !c.name.trim()))}`;
+}
+function setScriptCharCount(n){
+  const arr = [];
+  for(let i=0;i<n;i++){ arr.push(wz.scriptCharacters[i] || {modelId:null, name:''}); }
+  wz.scriptCharacters = arr;
+  renderWizard();
+}
+function setScriptCharModel(i, modelId){ wz.scriptCharacters[i].modelId = modelId; renderWizard(); }
+function setScriptCharName(i, name){
+  wz.scriptCharacters[i].name = name;
+  syncPrimaryBtn(wz.scriptCharacters.length===0 || wz.scriptCharacters.some(c => !c.modelId || !c.name.trim()));
 }
 
 /* ---- Prompt builder ---- */
@@ -687,18 +881,79 @@ function platformAlgoNotes(name){
   return notes[name] || "Keep it native to the platform's usual tone.";
 }
 
+function buildVideoPromptForPlatform(platform){
+  const isReels = wz.contentType === 'Reels';
+  const sourceLines = [];
+  if(wz.videoSource === '2photo'){
+    sourceLines.push(`VIDEO SOURCE: 2-photo video — animate from the attached start photo "${wz.videoStartFile?.name}" to the attached end photo "${wz.videoEndFile?.name}".`);
+    sourceLines.push(wz.videoMode === 'amaze' ? `MOTION DIRECTION: Not specified — invent a transition/motion that suits the mood and product.` : `MOTION DIRECTION: ${wz.videoNote}`);
+  } else if(wz.videoSource === 'text'){
+    sourceLines.push(`VIDEO SOURCE: Text-to-video — refine and expand the following rough script into a flowing, professional shooting script, then generate the video from it:\n"""\n${wz.videoScript}\n"""`);
+  } else if(wz.videoSource === 'image'){
+    sourceLines.push(`VIDEO SOURCE: Image-to-video — animate the attached photo "${wz.videoImageFile?.name}".`);
+    sourceLines.push(wz.videoMode === 'amaze' ? `MOTION DIRECTION: Not specified — invent a motion that suits the mood and product.` : `MOTION DIRECTION: ${wz.videoNote}`);
+  }
+  const refCount = wz.refFiles.filter(Boolean).length;
+  return [
+`SUBJECT: U-Design ${isReels ? 'Reels' : 'video'} advertisement`,
+`PRODUCT: ${wz.product}`,
+...sourceLines,
+`PLATFORM: ${platform.name} — aspect ratio ${platform.ratio} (${platform.meta})`,
+isReels
+  ? `ALGORITHM NOTES FOR THIS PLATFORM: ${platformAlgoNotes(platform.name)} Reels specifically reward: a hook in the first 1-2 seconds, fast pacing/jump cuts, on-screen text, and native vertical framing. Describe a trending-style audio vibe to pair it with.`
+  : `ALGORITHM NOTES: ${platformAlgoNotes(platform.name)}`,
+`MOOD: ${wz.mood}`,
+wz.scene ? `SCENARIO: ${wz.scene}` : null,
+`CHARACTER: Use the person in reference image "${MODELS.find(m=>m.id===wz.character)?.filename}" (attached separately) — keep facial identity, skin tone, and body proportions consistent. Do not alter their face.`,
+`BRAND LOGO: If the U-Design logo appears anywhere, use the exact attached file "udesign-logo.png" pixel-for-pixel — never redraw, recreate, or invent a substitute.`,
+refCount ? `STYLE REFERENCES: ${refCount} additional reference image(s) attached — style/colour-grading/posture/atmosphere only, not identity.` : null,
+`CREATIVE DIRECTION: ${wz.themeNote || 'Open — choose a direction that fits the mood and scenario above.'}`,
+``,
+`INSTRUCTIONS FOR GEMINI/VEO:`,
+`Generate one ${platform.ratio} ${isReels ? 'Reels-ready' : ''} video for U-Design (a UAE-based custom printing brand). Keep the U-Design brand tone: warm, authentic, natural light. Output the video only.`
+  ].filter(Boolean).join('\n');
+}
+
+function buildScriptPrompt(){
+  const isStory = wz.contentType === 'Say Your Story';
+  const chars = isStory ? [{modelId:'m5', name:'Prasant'}] : wz.scriptCharacters;
+  const charLines = chars.map(c => {
+    const m = MODELS.find(x => x.id === c.modelId);
+    return `  - "${c.name}" — reference image "${m?.filename}" (attached separately), keep facial identity consistent throughout.`;
+  }).join('\n');
+  return [
+`SUBJECT: ${isStory ? 'Personal founder story script for U-Design' : 'U-Design script'}`,
+`BRIEF: ${wz.scriptNote}`,
+`LENGTH: ${wz.scriptLength}`,
+`TONE: ${wz.scriptTone}`,
+`CHARACTERS:\n${charLines}`,
+`BRAND LOGO: If the U-Design logo appears in any shot, use the exact attached file "udesign-logo.png" pixel-for-pixel — never redraw or invent a substitute.`,
+`CREATIVE DIRECTION: ${wz.scriptMode === 'amaze' ? 'Open — decide the best direction for the brief, length and tone above.' : 'Apply the same direction consistently across every character and scene.'}`,
+`BRAND VOICE: U-Design — playful, warm, light Hinglish, emoji use, never corporate-sounding. Founders Prashant & Umair, Al Ain UAE, est. July 2026.`,
+``,
+`INSTRUCTIONS FOR GEMINI:`,
+`Write a full, detailed, scene-by-scene script (dialogue + camera/action directions) based on the brief above, matching the stated length and tone. ${isStory ? 'Write it in first person, as Prasant telling his own story.' : 'Use the named characters exactly as specified, staying visually consistent with their attached reference identities.'} Output the finished script only, ready to read or shoot from.`
+  ].join('\n');
+}
+
 function renderPromptStep(){
   const isPost = wz.contentType === 'Post';
+  const isVideoFamily = wz.contentType === 'Video' || wz.contentType === 'Reels';
+  const isScriptFamily = wz.contentType === 'Script' || wz.contentType === 'Say Your Story';
   if(!wz.promptText){
-    wz.promptText = wz.platforms.map(pn => {
-      const p = PLATFORMS.find(x => x.name === pn);
-      const builder = isPost ? buildPostPromptForPlatform : buildPromptForPlatform;
-      return `=== ${p.name} (${p.ratio}) ===\n` + builder(p);
-    }).join('\n\n');
+    if(isScriptFamily){
+      wz.promptText = buildScriptPrompt();
+    } else {
+      wz.promptText = wz.platforms.map(pn => {
+        const p = PLATFORMS.find(x => x.name === pn);
+        const builder = isPost ? buildPostPromptForPlatform : (isVideoFamily ? buildVideoPromptForPlatform : buildPromptForPlatform);
+        return `=== ${p.name} (${p.ratio}) ===\n` + builder(p);
+      }).join('\n\n');
+    }
   }
   return `<div class="step-eyebrow mono">${stepLabel()}</div>
     <div class="step-title display">Your prompt pack</div>
-    <div class="step-sub">Edit anything below, then copy it or download the whole pack (prompt + reference images) as one zip to paste into Gemini yourself.</div>
+    <div class="step-sub">Edit anything below, then copy it or download the whole pack (prompt + every reference/source image) as one zip to paste into Gemini yourself.</div>
     <textarea class="free-input mono-box" oninput="wz.promptText=this.value">${wz.promptText}</textarea>
     <div class="step-actions">
       <button class="btn" onclick="prevStep()">← Back</button>
@@ -706,7 +961,7 @@ function renderPromptStep(){
       <button class="btn cyan" onclick="downloadPack()">⬇ Download pack (.zip)</button>
       <button class="btn primary" onclick="nextStep()">I ran it in Gemini →</button>
     </div>
-    <div class="note-box"><b>In the zip:</b> prompt.txt (all platforms) + every reference image you uploaded, with original filenames — one folder, nothing to re-pick manually.</div>`;
+    <div class="note-box"><b>In the zip:</b> prompt.txt + every reference/source/character image needed, with original filenames — one folder, nothing to re-pick manually.</div>`;
 }
 function copyPrompt(){
   navigator.clipboard.writeText(wz.promptText).then(() => toast('Prompt copied'));
@@ -715,8 +970,30 @@ async function downloadPack(){
   const zip = new JSZip();
   zip.file('prompt.txt', wz.promptText);
   const refsFolder = zip.folder('reference-images');
+
   if(wz.contentType === 'Post'){
     if(wz.postImage) refsFolder.file(wz.postImage.name, wz.postImage);
+
+  } else if(wz.contentType === 'Video' || wz.contentType === 'Reels'){
+    if(wz.videoSource === '2photo'){
+      if(wz.videoStartFile) refsFolder.file(wz.videoStartFile.name, wz.videoStartFile);
+      if(wz.videoEndFile) refsFolder.file(wz.videoEndFile.name, wz.videoEndFile);
+    } else if(wz.videoSource === 'image'){
+      if(wz.videoImageFile) refsFolder.file(wz.videoImageFile.name, wz.videoImageFile);
+    }
+    wz.refFiles.forEach(f => { if(f) refsFolder.file(f.name, f); });
+    const model = MODELS.find(m => m.id === wz.character);
+    if(model){ refsFolder.file(model.filename, model.full.split(',')[1], {base64:true}); }
+    refsFolder.file('udesign-logo.png', UDESIGN_LOGO.split(',')[1], {base64:true});
+
+  } else if(wz.contentType === 'Script' || wz.contentType === 'Say Your Story'){
+    const chars = wz.contentType === 'Say Your Story' ? [{modelId:'m5'}] : wz.scriptCharacters;
+    chars.forEach(c => {
+      const m = MODELS.find(x => x.id === c.modelId);
+      if(m) refsFolder.file(m.filename, m.full.split(',')[1], {base64:true});
+    });
+    refsFolder.file('udesign-logo.png', UDESIGN_LOGO.split(',')[1], {base64:true});
+
   } else {
     wz.refFiles.forEach(f => { if(f) refsFolder.file(f.name, f); });
     const model = MODELS.find(m => m.id === wz.character);
@@ -729,6 +1006,7 @@ async function downloadPack(){
       refsFolder.file(wz.graphicsFile.name, wz.graphicsFile);
     }
   }
+
   const blob = await zip.generateAsync({type:'blob'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -763,6 +1041,31 @@ function renderPostResultStep(){
     <div class="gen-box square" style="max-width:220px; margin-bottom:20px;"><img src="${wz.postImagePreview}"></div>
     <textarea class="free-input mono-box" style="min-height:180px;" placeholder="Paste the generated post text here..." oninput="wz.postText=this.value">${wz.postText}</textarea>
     ${footer(!wz.postText.trim(), "Looks good →")}`;
+}
+
+function renderScriptResultStep(){
+  return `<div class="step-eyebrow mono">${stepLabel()}</div>
+    <div class="step-title display">Your finished script</div>
+    <div class="step-sub">Paste what Gemini wrote — this is your final script, ready to copy or download.</div>
+    <textarea class="free-input mono-box" style="min-height:260px;" placeholder="Paste the generated script here..." oninput="wz.scriptResultText=this.value;">${wz.scriptResultText}</textarea>
+    <div class="step-actions">
+      <button class="btn" onclick="prevStep()">← Back</button>
+      <button class="btn cyan" onclick="copyScriptResult()">Copy script</button>
+      <button class="btn cyan" onclick="downloadScriptText()">⬇ Download .txt</button>
+      <button class="btn ghost" onclick="startWizard()">Start a new one ↻</button>
+    </div>`;
+}
+function copyScriptResult(){
+  navigator.clipboard.writeText(wz.scriptResultText).then(() => toast('Script copied'));
+}
+function downloadScriptText(){
+  const blob = new Blob([wz.scriptResultText], {type:'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'udesign-script.txt';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+  toast('Script downloaded');
 }
 
 function renderCaption(){
@@ -801,9 +1104,15 @@ function setCaptionMode(m){ wz.captionMode = m; renderWizard(); }
 
 function renderPublish(){
   const isPost = wz.contentType === 'Post';
+  const isVideo = wz.contentType === 'Video' || wz.contentType === 'Reels';
+  const mediaBlock = isPost
+    ? (wz.postImagePreview ? `<div class="gen-box square" style="max-width:220px;"><img src="${wz.postImagePreview}"></div>` : '')
+    : isVideo
+      ? (wz.videoResultPreview ? `<video controls style="width:100%; max-width:280px; border-radius:2px; border:1px solid var(--line);" src="${wz.videoResultPreview}"></video>` : '')
+      : (wz.resultImage ? `<div class="gen-box square" style="max-width:220px;"><img src="${wz.resultImage}"></div>` : '');
   return `<div class="step-eyebrow mono">${stepLabel()}</div><div class="step-title display">Publish</div>
-    <div class="step-sub">${isPost ? 'Post text is locked to the photo.' : 'Caption is locked to the image.'} Choose when it goes out.</div>
-    <div class="gen-box square" style="max-width:220px;">${(isPost ? wz.postImagePreview : wz.resultImage) ? `<img src="${isPost ? wz.postImagePreview : wz.resultImage}">` : ''}</div>
+    <div class="step-sub">${isPost ? 'Post text is locked to the photo.' : 'Caption is locked to the ' + (isVideo?'video':'image') + '.'} Choose when it goes out.</div>
+    ${mediaBlock}
     ${isPost ? `<div class="note-box" style="margin-top:16px; white-space:pre-wrap;">${wz.postText}</div>` : ''}
     <div class="publish-row">
       <button class="btn primary" onclick="alert('This will post live once Instagram / TikTok / Facebook / WhatsApp are connected and approved as posting apps.')">Publish now</button>
