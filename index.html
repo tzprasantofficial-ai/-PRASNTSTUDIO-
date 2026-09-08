@@ -324,8 +324,6 @@
 <body>
 
 <div class="banner">PROTOTYPE — the website builds your prompt + reference pack; you run it in Gemini yourself · auto-posting is mocked until platform accounts are connected</div>
-<!-- BUILD NUMBER: PS0003 — bump this (and the badge div below) by one on every future edit to this file -->
-<div id="akr-build-badge" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:monospace;font-size:10px;letter-spacing:.05em;color:var(--muted,#888);background:rgba(0,0,0,.35);padding:3px 7px;border-radius:6px;pointer-events:none">PS0003</div>
 <div class="toast" id="toast"></div>
 
 <section class="screen active" id="screen-landing">
@@ -1558,28 +1556,28 @@ const AKR_PLATFORMS_VIDEO = [
 // food filmmakers. Each entry is a shootable directive, not a mood word.
 const AKR_VIDEO_SHOT_STYLES = {
   'Real Estate': [
-    {name:'Drone Fly-By Reveal', desc:'Low approach, rising past the facade', skill:`SHOT SKILL - DRONE FLY-BY REVEAL: Begin low and wide, roughly 15-20m out, camera level with the roofline. Fly forward at a constant slow speed while tilting up 10-15 degrees so the property grows in frame rather than jumping into it. Keep the horizon straight throughout. Golden hour only - harsh midday sun flattens the roof and blows out white render. End the move with the property centred and the sky occupying the top third. No abrupt yaw. 4K 24fps for cinematic motion blur, or 60fps if you intend to ramp it down in the edit.`, photo:{type:'Exterior wide establishing photo',count:'1',bg:'Open sky, golden-hour light, no clutter around the facade',note:'Opens with a slow rising drone push toward the property at golden hour.'}},
-    {name:'Drone Orbit / Circle', desc:'360 arc holding the property centred', skill:`SHOT SKILL - DRONE ORBIT: Lock a point of interest on the building centre and orbit at a fixed radius and fixed altitude - inconsistent radius is the single most common amateur tell. One full revolution should take 25-40 seconds; faster reads as frantic. Orbit direction should follow the sun so the facade stays lit and you avoid flying into flare halfway round. Keep at least one strong foreground element (tree line, pool, driveway) passing through frame to give the viewer parallax and a sense of scale.`, photo:{type:'Aerial exterior photo',count:'1',bg:'Clear sky, landscaping and driveway visible',note:'Circles the whole property in one smooth 360, revealing every angle.'}},
-    {name:'Room Showcase (Static Hero)', desc:'Locked wide, one room, perfect symmetry', skill:`SHOT SKILL - ROOM HERO: Tripod, locked off, lens at 16-24mm equivalent but never so wide it bows the verticals. Camera height 1.4-1.5m - eye level for a standing adult, which is how a buyer will remember the room. Square the camera to the back wall so all vertical lines are truly vertical; a tilted vertical is what makes a room look cheap. Shoot into the room's best light source with curtains open and every interior light on - mixing daylight and warm practicals is what gives property interiors depth. Hold for 5-6 seconds minimum so the shot is usable in the edit.`, photo:{type:'Interior room photo, eye-level, dead-on',count:'1 per room (2-3 rooms ideal)',bg:'Curtains open, every light on, nothing blocking the back wall',note:'Holds on each room like a postcard before cutting to the next.'}},
-    {name:'Walkthrough / Experience Walk', desc:'Gimbal POV moving through the home', skill:`SHOT SKILL - WALKTHROUGH: Gimbal at chest height, heel-to-toe ninja walk to kill vertical bounce. Move at a genuinely slow pace - roughly half your natural walking speed. Lead the viewer through doorways and reveal each space as a person would actually discover it, never cutting the geography. Pause 2 seconds on entering each room before moving on; that pause is what lets the viewer absorb the space. Keep the lens at 24-35mm - ultra-wide on a moving gimbal induces motion sickness. One continuous unbroken take per floor is the goal.`, photo:{type:'Interior hallway/doorway photo',count:'2-3, one per room in sequence',bg:'Naturally lit hallways with doorways open',note:'Feels like walking through the home yourself, room to room.'}},
-    {name:'Detail & Texture Close-Ups', desc:'Macro passes on materials and finishes', skill:`SHOT SKILL - DETAIL PASS: Shoot the things that justify the price - the marble vein, the tap finish, the joinery seam, the handle weight, the stone edge. Shallow depth of field at f/2.0-f/2.8, slow slider or focus pull across the surface. Rake light across the material at a low angle to reveal texture; flat frontal light makes premium finishes look laminate. Each detail shot should last 3-4 seconds. These are the shots that separate a listing video from a luxury film.`, photo:{type:'Macro close-up of a material or finish',count:'3-4',bg:'Neutral surface, low raking light to show texture',note:'Lingers on the finishes that actually justify the price tag.'}},
-    {name:'Dolly / Slider Push-In', desc:'Slow linear push revealing depth', skill:`SHOT SKILL - DOLLY PUSH: A slow linear push forward through a doorway or along a hallway, revealing depth and layered space. Speed should be almost imperceptible - a 1 metre travel over 8-10 seconds. Keep a strong foreground element at the edge of frame to sell the movement. Push toward the light source or the view, never away from it. Motorised slider or a gimbal in a locked forward crawl; handheld will not hold this steady enough.`, photo:{type:'Doorway or hallway photo showing depth',count:'1',bg:'Light source visible at the far end of the space',note:'Slowly pushes forward into the space, revealing depth as it goes.'}},
-    {name:'Brand & Spec Breakdown', desc:'Room with labelled fixtures and brands', skill:`SHOT SKILL - SPEC BREAKDOWN: Static or very slow locked shot of the room, composed with deliberate negative space where the labels will sit in post. Shoot the room clean first, then shoot inserts of each named item - appliance badge, tap brand, worktop material, flooring. In the edit, callouts animate in with a thin leader line to each item. This is a high-retention format because it converts a pretty room into verifiable value. Keep labels short - brand and material only, no sales copy.`, photo:{type:'Clean room photo with open negative space',count:'1',bg:'Uncluttered room with appliances or fixtures clearly visible',note:'Labels drift in pointing to the brand and material as the camera holds.'}},
-    {name:'Build-Up Reveal (Nothing to Luxury)', desc:'Empty shell assembling into finished home', skill:`SHOT SKILL - BUILD-UP REVEAL: A staged transformation where the space assembles from empty to fully finished. Practical method: lock the camera on a tripod and shoot the identical framing at each stage of styling - empty, then flooring, then furniture, then lighting and dressing - never moving the camera between passes. In the edit, cross-dissolve or match-cut between passes so elements appear to materialise. If generating with AI, describe it as a single continuous locked shot where furnishings and finishes progressively appear. The locked framing is what makes the effect read; any camera drift breaks the illusion.`, photo:{type:'Empty-room photo, same framing repeated',count:'2 (empty shell + fully furnished, identical angle)',bg:'Locked camera position kept exactly the same for both shots',note:'Watches the room transform from empty shell to finished home.'}},
-    {name:'Golden Hour Exterior Beauty', desc:'Twilight facade with warm interior glow', skill:`SHOT SKILL - TWILIGHT BEAUTY: Shoot in the 20-minute window just after sunset when the sky still holds blue but interior lights read warm - this contrast is what makes property photography look expensive. Every interior light on, curtains open, exterior and landscape lighting on. Long exposure or low shutter on a tripod. Compose with the property occupying the lower two thirds and the gradient sky above. This is the single most valuable exterior shot in property marketing.`, photo:{type:'Twilight exterior photo',count:'1',bg:'Dusk sky with blue still in it, every interior light on',note:'The single shot that makes the whole listing look expensive.'}},
-    {name:'Lifestyle / Living the Space', desc:'People genuinely using the home', skill:`SHOT SKILL - LIFESTYLE: Show the home being lived in rather than displayed - coffee at the island, reading by the window, a door opening onto the terrace. Keep talent in soft focus or partially out of frame; the property is the subject, the person is the scale and the emotion. Natural movement, no posing to camera, no eye contact with lens. Warm grade. This is what converts a viewer from admiring the property to imagining themselves in it.`, photo:{type:'Candid photo of someone using the space',count:'1-2',bg:'Natural home setting, person softly out of focus',note:'Shows someone actually living there, not just admiring it.'}},
-    {name:'Neighbourhood & Location Context', desc:'Aerial and street context around the property', skill:`SHOT SKILL - LOCATION CONTEXT: Buyers buy the area as much as the building. Cover the approach road, nearby landmarks, the school run distance, the beach or skyline view, the drive time context. Mix a high aerial establishing the district with ground-level street texture. Shoot at the time of day the area looks most alive. Keep it honest - showing a landmark that is 20 minutes away as if adjacent destroys trust immediately.`, photo:{type:'Street-level or landmark photo',count:'2-3',bg:'Local streets, nearby landmarks or amenities',note:'Sets the scene for the area before circling back to the home.'}}
+    {name:'Drone Fly-By Reveal', desc:'Low approach, rising past the facade', skill:`SHOT SKILL - DRONE FLY-BY REVEAL: Begin low and wide, roughly 15-20m out, camera level with the roofline. Fly forward at a constant slow speed while tilting up 10-15 degrees so the property grows in frame rather than jumping into it. Keep the horizon straight throughout. Golden hour only - harsh midday sun flattens the roof and blows out white render. End the move with the property centred and the sky occupying the top third. No abrupt yaw. 4K 24fps for cinematic motion blur, or 60fps if you intend to ramp it down in the edit.`},
+    {name:'Drone Orbit / Circle', desc:'360 arc holding the property centred', skill:`SHOT SKILL - DRONE ORBIT: Lock a point of interest on the building centre and orbit at a fixed radius and fixed altitude - inconsistent radius is the single most common amateur tell. One full revolution should take 25-40 seconds; faster reads as frantic. Orbit direction should follow the sun so the facade stays lit and you avoid flying into flare halfway round. Keep at least one strong foreground element (tree line, pool, driveway) passing through frame to give the viewer parallax and a sense of scale.`},
+    {name:'Room Showcase (Static Hero)', desc:'Locked wide, one room, perfect symmetry', skill:`SHOT SKILL - ROOM HERO: Tripod, locked off, lens at 16-24mm equivalent but never so wide it bows the verticals. Camera height 1.4-1.5m - eye level for a standing adult, which is how a buyer will remember the room. Square the camera to the back wall so all vertical lines are truly vertical; a tilted vertical is what makes a room look cheap. Shoot into the room's best light source with curtains open and every interior light on - mixing daylight and warm practicals is what gives property interiors depth. Hold for 5-6 seconds minimum so the shot is usable in the edit.`},
+    {name:'Walkthrough / Experience Walk', desc:'Gimbal POV moving through the home', skill:`SHOT SKILL - WALKTHROUGH: Gimbal at chest height, heel-to-toe ninja walk to kill vertical bounce. Move at a genuinely slow pace - roughly half your natural walking speed. Lead the viewer through doorways and reveal each space as a person would actually discover it, never cutting the geography. Pause 2 seconds on entering each room before moving on; that pause is what lets the viewer absorb the space. Keep the lens at 24-35mm - ultra-wide on a moving gimbal induces motion sickness. One continuous unbroken take per floor is the goal.`},
+    {name:'Detail & Texture Close-Ups', desc:'Macro passes on materials and finishes', skill:`SHOT SKILL - DETAIL PASS: Shoot the things that justify the price - the marble vein, the tap finish, the joinery seam, the handle weight, the stone edge. Shallow depth of field at f/2.0-f/2.8, slow slider or focus pull across the surface. Rake light across the material at a low angle to reveal texture; flat frontal light makes premium finishes look laminate. Each detail shot should last 3-4 seconds. These are the shots that separate a listing video from a luxury film.`},
+    {name:'Dolly / Slider Push-In', desc:'Slow linear push revealing depth', skill:`SHOT SKILL - DOLLY PUSH: A slow linear push forward through a doorway or along a hallway, revealing depth and layered space. Speed should be almost imperceptible - a 1 metre travel over 8-10 seconds. Keep a strong foreground element at the edge of frame to sell the movement. Push toward the light source or the view, never away from it. Motorised slider or a gimbal in a locked forward crawl; handheld will not hold this steady enough.`},
+    {name:'Brand & Spec Breakdown', desc:'Room with labelled fixtures and brands', skill:`SHOT SKILL - SPEC BREAKDOWN: Static or very slow locked shot of the room, composed with deliberate negative space where the labels will sit in post. Shoot the room clean first, then shoot inserts of each named item - appliance badge, tap brand, worktop material, flooring. In the edit, callouts animate in with a thin leader line to each item. This is a high-retention format because it converts a pretty room into verifiable value. Keep labels short - brand and material only, no sales copy.`},
+    {name:'Build-Up Reveal (Nothing to Luxury)', desc:'Empty shell assembling into finished home', skill:`SHOT SKILL - BUILD-UP REVEAL: A staged transformation where the space assembles from empty to fully finished. Practical method: lock the camera on a tripod and shoot the identical framing at each stage of styling - empty, then flooring, then furniture, then lighting and dressing - never moving the camera between passes. In the edit, cross-dissolve or match-cut between passes so elements appear to materialise. If generating with AI, describe it as a single continuous locked shot where furnishings and finishes progressively appear. The locked framing is what makes the effect read; any camera drift breaks the illusion.`},
+    {name:'Golden Hour Exterior Beauty', desc:'Twilight facade with warm interior glow', skill:`SHOT SKILL - TWILIGHT BEAUTY: Shoot in the 20-minute window just after sunset when the sky still holds blue but interior lights read warm - this contrast is what makes property photography look expensive. Every interior light on, curtains open, exterior and landscape lighting on. Long exposure or low shutter on a tripod. Compose with the property occupying the lower two thirds and the gradient sky above. This is the single most valuable exterior shot in property marketing.`},
+    {name:'Lifestyle / Living the Space', desc:'People genuinely using the home', skill:`SHOT SKILL - LIFESTYLE: Show the home being lived in rather than displayed - coffee at the island, reading by the window, a door opening onto the terrace. Keep talent in soft focus or partially out of frame; the property is the subject, the person is the scale and the emotion. Natural movement, no posing to camera, no eye contact with lens. Warm grade. This is what converts a viewer from admiring the property to imagining themselves in it.`},
+    {name:'Neighbourhood & Location Context', desc:'Aerial and street context around the property', skill:`SHOT SKILL - LOCATION CONTEXT: Buyers buy the area as much as the building. Cover the approach road, nearby landmarks, the school run distance, the beach or skyline view, the drive time context. Mix a high aerial establishing the district with ground-level street texture. Shoot at the time of day the area looks most alive. Keep it honest - showing a landmark that is 20 minutes away as if adjacent destroys trust immediately.`}
   ],
   'Restaurant': [
-    {name:'The Pour / Action Hero Shot', desc:'Sauce, syrup or drink caught in motion', skill:`SHOT SKILL - THE POUR: The highest-performing food video shot. Shoot at 120fps minimum, played back at 24fps for smooth slow motion. Backlight or strong side-light the stream so the liquid glows and shows translucency - front lighting kills it completely. Lock the camera and let the action happen in frame rather than chasing it. Have the dish pre-styled and shoot the pour on the last take when everything else is perfect, since it cannot be reset. Shallow depth at f/2.8, focused on the point of impact.`, photo:{type:'Photo of the pour or drizzle mid-motion',count:'1',bg:'Dark, backlit background so the stream glows',note:'Slows the pour down into a glowing, syrupy money shot.'}},
-    {name:'The Cheese Pull / Stretch', desc:'Melt, stretch and separation in slow motion', skill:`SHOT SKILL - THE PULL: Shoot at 120fps. Food must be at peak temperature - there is a 15-second window before cheese seizes. Backlight at 45 degrees to rim the stretch and separate it from the background. Dark, uncluttered background so the stretch reads clearly. Two people needed: one pulling, one operating. Multiple takes with fresh product each time; a re-pulled portion never looks right.`, photo:{type:'Photo frozen mid-pull',count:'1',bg:'Dark, uncluttered background to isolate the stretch',note:'Freezes the stretch at its most satisfying, gooey moment.'}},
-    {name:'The Sizzle / Flame', desc:'Heat, steam, fire and pan action', skill:`SHOT SKILL - SIZZLE & FLAME: Shoot in a darkened kitchen so flame reads as the key light. Underexpose slightly by half a stop to protect the flame highlights and let the fire define the frame. 120fps for flame, 60fps for steam - steam looks wrong slowed too far. Backlight steam against a dark background; steam is invisible on a light background. Get low and close, at pan level, not looking down from above.`, photo:{type:'Photo of the pan or flame mid-action',count:'1',bg:'Darkened kitchen so the flame reads as the key light',note:'Turns the flame into the star of a few dramatic seconds.'}},
-    {name:'Top-Down Menu Shot', desc:'Flat overhead, clean, delivery-app ready', skill:`SHOT SKILL - TOP-DOWN: Camera perfectly perpendicular to the table - even 5 degrees of tilt is visible and looks careless. Large diffused soft source from one side, white bounce opposite to lift shadows without flattening. Style with deliberate negative space for menu or app cropping. Odd numbers of items compose better than even. Wipe the plate rim before every take. Shoot slightly wider than needed so the frame survives the different crops delivery apps apply.`, photo:{type:'Flat-lay overhead photo of the plated dish',count:'1 per dish (2-3 dishes ideal)',bg:'Clean table surface, soft diffused light from one side',note:'Sits straight down, menu-ready, crops clean on any delivery app.'}},
-    {name:'Chef Hands & Craft', desc:'Plating, knife work, hands at work', skill:`SHOT SKILL - CHEF CRAFT: Focus tight on hands and the work, not the chef face. Shows skill and justifies price. 24-35mm close, shallow depth, follow the movement with a gimbal or slider rather than a static frame. Clean hands, clean apron, clean surface - the audience reads hygiene instantly. Shoot the same action three or four times from different angles so the edit can cut for rhythm. Natural sound of the knife and the pan is as important as the visual.`, photo:{type:'Close-up photo of hands plating or cooking',count:'2-3',bg:'Clean kitchen surface, tidy apron in frame',note:'Follows the hands doing the work customers never usually see.'}},
-    {name:'Ambiance & Room Mood', desc:'The dining room, light and atmosphere', skill:`SHOT SKILL - AMBIANCE: Shoot at the restaurant best hour - typically just before service when the room is dressed but empty, or during golden hour if there is window light. Every practical light on, dimmed to warm. Slow slider or gentle gimbal drift through the room, never static. Include one foreground element to give depth. This shot sells the occasion rather than the food, and it is what makes people choose you for a date or a celebration.`, photo:{type:'Interior dining-room photo',count:'1',bg:'Room dressed and empty, warm dimmed practicals on',note:'Drifts through the room to sell the occasion, not the food.'}},
-    {name:'First Bite / Reaction', desc:'The bite and the genuine response', skill:`SHOT SKILL - FIRST BITE: Two angles cut together - tight on the food entering frame, then the reaction. The reaction must be genuine; a performed reaction reads as an advert instantly and kills the piece. Shoot the bite at 60fps, the reaction at 24fps for natural human timing. Warm, soft light on the face. Keep the mouth shot tasteful and tight. This is the highest-emotion shot in food marketing.`, photo:{type:'Photo of the bite plus the genuine reaction',count:'2 (food entering frame + the reaction)',bg:'Soft warm light on the face, tasteful framing',note:'Cuts from the bite landing to the real reaction on their face.'}},
-    {name:'The 360 Dish Spin', desc:'Orbit around a hero plate', skill:`SHOT SKILL - DISH ORBIT: Motorised turntable under the plate or a slow gimbal orbit around it. One full rotation in 5-7 seconds. Keep light static while the dish rotates so highlights travel across the food and reveal texture and gloss. Dark or gradient background to isolate the plate. Garnish placed at the point that will face camera at the end of the rotation. Best used as a menu hero or an opening shot.`, photo:{type:'Overhead or orbiting photo of the hero plate',count:'1',bg:'Dark or gradient background to isolate the plate',note:'Rotates slowly around the hero plate to show every side.'}},
-    {name:'Delivery / Takeaway Journey', desc:'Packaging, handover and unboxing', skill:`SHOT SKILL - DELIVERY JOURNEY: Follows the food from kitchen pass to the customer door. Shows speed, packaging quality and care - the three things delivery customers actually worry about. Handheld and slightly energetic to convey pace, cutting faster than other food shots. End on the unboxing at home with steam still visible; steam at the door is proof of freshness and it is the single most persuasive frame in the sequence.`, photo:{type:'Photo of packaging, handover or unboxing',count:'2-3',bg:'Kitchen pass through to the front door, steam visible',note:'Follows the order from kitchen to doorstep, steam and all.'}}
+    {name:'The Pour / Action Hero Shot', desc:'Sauce, syrup or drink caught in motion', skill:`SHOT SKILL - THE POUR: The highest-performing food video shot. Shoot at 120fps minimum, played back at 24fps for smooth slow motion. Backlight or strong side-light the stream so the liquid glows and shows translucency - front lighting kills it completely. Lock the camera and let the action happen in frame rather than chasing it. Have the dish pre-styled and shoot the pour on the last take when everything else is perfect, since it cannot be reset. Shallow depth at f/2.8, focused on the point of impact.`},
+    {name:'The Cheese Pull / Stretch', desc:'Melt, stretch and separation in slow motion', skill:`SHOT SKILL - THE PULL: Shoot at 120fps. Food must be at peak temperature - there is a 15-second window before cheese seizes. Backlight at 45 degrees to rim the stretch and separate it from the background. Dark, uncluttered background so the stretch reads clearly. Two people needed: one pulling, one operating. Multiple takes with fresh product each time; a re-pulled portion never looks right.`},
+    {name:'The Sizzle / Flame', desc:'Heat, steam, fire and pan action', skill:`SHOT SKILL - SIZZLE & FLAME: Shoot in a darkened kitchen so flame reads as the key light. Underexpose slightly by half a stop to protect the flame highlights and let the fire define the frame. 120fps for flame, 60fps for steam - steam looks wrong slowed too far. Backlight steam against a dark background; steam is invisible on a light background. Get low and close, at pan level, not looking down from above.`},
+    {name:'Top-Down Menu Shot', desc:'Flat overhead, clean, delivery-app ready', skill:`SHOT SKILL - TOP-DOWN: Camera perfectly perpendicular to the table - even 5 degrees of tilt is visible and looks careless. Large diffused soft source from one side, white bounce opposite to lift shadows without flattening. Style with deliberate negative space for menu or app cropping. Odd numbers of items compose better than even. Wipe the plate rim before every take. Shoot slightly wider than needed so the frame survives the different crops delivery apps apply.`},
+    {name:'Chef Hands & Craft', desc:'Plating, knife work, hands at work', skill:`SHOT SKILL - CHEF CRAFT: Focus tight on hands and the work, not the chef face. Shows skill and justifies price. 24-35mm close, shallow depth, follow the movement with a gimbal or slider rather than a static frame. Clean hands, clean apron, clean surface - the audience reads hygiene instantly. Shoot the same action three or four times from different angles so the edit can cut for rhythm. Natural sound of the knife and the pan is as important as the visual.`},
+    {name:'Ambiance & Room Mood', desc:'The dining room, light and atmosphere', skill:`SHOT SKILL - AMBIANCE: Shoot at the restaurant best hour - typically just before service when the room is dressed but empty, or during golden hour if there is window light. Every practical light on, dimmed to warm. Slow slider or gentle gimbal drift through the room, never static. Include one foreground element to give depth. This shot sells the occasion rather than the food, and it is what makes people choose you for a date or a celebration.`},
+    {name:'First Bite / Reaction', desc:'The bite and the genuine response', skill:`SHOT SKILL - FIRST BITE: Two angles cut together - tight on the food entering frame, then the reaction. The reaction must be genuine; a performed reaction reads as an advert instantly and kills the piece. Shoot the bite at 60fps, the reaction at 24fps for natural human timing. Warm, soft light on the face. Keep the mouth shot tasteful and tight. This is the highest-emotion shot in food marketing.`},
+    {name:'The 360 Dish Spin', desc:'Orbit around a hero plate', skill:`SHOT SKILL - DISH ORBIT: Motorised turntable under the plate or a slow gimbal orbit around it. One full rotation in 5-7 seconds. Keep light static while the dish rotates so highlights travel across the food and reveal texture and gloss. Dark or gradient background to isolate the plate. Garnish placed at the point that will face camera at the end of the rotation. Best used as a menu hero or an opening shot.`},
+    {name:'Delivery / Takeaway Journey', desc:'Packaging, handover and unboxing', skill:`SHOT SKILL - DELIVERY JOURNEY: Follows the food from kitchen pass to the customer door. Shows speed, packaging quality and care - the three things delivery customers actually worry about. Handheld and slightly energetic to convey pace, cutting faster than other food shots. End on the unboxing at home with steam still visible; steam at the door is proof of freshness and it is the single most persuasive frame in the sequence.`}
   ]
 };
 
@@ -1838,7 +1836,7 @@ function akrFreshWz(){ return { type:null, client:null, style:null, platform:nul
   logoFile:null, logoPreview:null,
   productImages:[], productPreviews:[],
   originalPrice:'', salesPrice:'', productDescription:'',
-  scriptStyle:null, shotStyles:[], shotExpanded:null, shotRefs:{}, shotRefPreviews:{}, duration:null, captionMode:null, captionIntent:null,
+  scriptStyle:null, shotStyles:[], duration:null, captionMode:null, captionIntent:null,
   resultImage:null, resultImageFile:null, resultIsVideo:false, captionPrompt:'', caption:'' }; }
 
 function akrHandleRefBgUpload(file){
@@ -1913,32 +1911,6 @@ function akrToggleShot(name){
   const i = akrWz.shotStyles.indexOf(name);
   if(i>=0) akrWz.shotStyles.splice(i,1); else akrWz.shotStyles.push(name);
   akrRenderWizard();
-}
-function akrToggleShotExpand(name){
-  akrWz.shotExpanded = (akrWz.shotExpanded === name) ? null : name;
-  akrRenderWizard();
-}
-function akrHandleShotRefUpload(name, file){
-  if(!file) return;
-  akrWz.shotRefs = akrWz.shotRefs || {};
-  akrWz.shotRefPreviews = akrWz.shotRefPreviews || {};
-  akrWz.shotRefs[name] = akrWz.shotRefs[name] || [];
-  akrWz.shotRefPreviews[name] = akrWz.shotRefPreviews[name] || [];
-  if(akrWz.shotRefPreviews[name].length >= 6) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    akrWz.shotRefs[name].push(file);
-    akrWz.shotRefPreviews[name].push(e.target.result);
-    akrRenderWizard();
-  };
-  reader.readAsDataURL(file);
-}
-function akrRemoveShotRef(name, idx){
-  if(akrWz.shotRefPreviews && akrWz.shotRefPreviews[name]){
-    akrWz.shotRefPreviews[name].splice(idx,1);
-    akrWz.shotRefs[name].splice(idx,1);
-    akrRenderWizard();
-  }
 }
 function akrShotList(){
   return AKR_VIDEO_SHOT_STYLES[akrWz.client] || AKR_VIDEO_SHOT_STYLES['Other'];
@@ -2158,21 +2130,6 @@ function akrDeleteProject(idx){
   akrRenderWizard();
 }
 
-// Fingerprints every field that feeds into the built prompt. Used to detect when an
-// earlier step changed so the cached prompt.txt gets rebuilt instead of silently reused —
-// this is what was causing three different jobs to show the same stale prompt.
-function akrPromptFingerprint(){
-  return JSON.stringify({
-    type: akrWz.type, client: akrWz.client, style: akrWz.style, scriptStyle: akrWz.scriptStyle,
-    platform: akrWz.platform, duration: akrWz.duration, purpose: akrWz.purpose, mood: akrWz.mood,
-    brief: akrWz.brief, shotStyles: akrWz.shotStyles, character: akrWz.character,
-    modelMode: akrWz.modelMode, hasModelPhoto: !!akrWz.modelPhoto,
-    refBgAmaze: akrWz.refBgAmaze, refImagesCount: (akrWz.refImages||[]).length,
-    lightingAmaze: akrWz.lightingAmaze, hasLightingFile: !!akrWz.lightingFile,
-    hasLogoFile: !!akrWz.logoFile, productImagesCount: (akrWz.productImages||[]).length,
-    originalPrice: akrWz.originalPrice, salesPrice: akrWz.salesPrice, productDescription: akrWz.productDescription
-  });
-}
 function buildAkritiPhotoPrompt(){
   const ratio = (AKR_PLATFORMS_PHOTO.concat(AKR_PLATFORMS_VIDEO)).find(p=>p.name===akrWz.platform)?.ratio || '';
   const refCount = (akrWz.refImages||[]).length;
@@ -2379,14 +2336,6 @@ async function downloadAkritiPack(){
   if(akrWz.lightingFile) refs.file(akrWz.lightingFile.name, akrWz.lightingFile);
   if(akrWz.logoFile) refs.file(`client-logo-${akrWz.logoFile.name}`, akrWz.logoFile);
   (akrWz.productImages||[]).forEach((f,i) => { if(f) refs.file(`product-${i+1}-${f.name}`, f); });
-  const shotRefs = akrWz.shotRefs || {};
-  Object.keys(shotRefs).forEach(shotName => {
-    const files = shotRefs[shotName] || [];
-    if(!files.length) return;
-    const safeName = shotName.replace(/[^a-z0-9]+/gi,'-').replace(/^-+|-+$/g,'').toLowerCase();
-    const shotFolder = refs.folder(`shot-${safeName || 'reference'}`);
-    files.forEach((f,i) => { if(f) shotFolder.file(f.name || `ref-${i+1}.jpg`, f); });
-  });
   if(AKR_MOOD_SKILLS[akrWz.mood]) zip.file('style-dna-reference.txt', AKR_MOOD_SKILLS[akrWz.mood]);
   const blob = await zip.generateAsync({type:'blob'});
   const url = URL.createObjectURL(blob);
@@ -2443,7 +2392,7 @@ function akrGetSteps(){
     return ['type','client','style','platform-photo','assets','purpose','mood','model','prompt','result-upload','caption','publish'];
   }
   if(akrWz.type === 'Video' || akrWz.type === 'Reels'){
-    return ['type','client','scriptstyle','shotstyle','platform-video','duration','purpose','mood','model','prompt','result-upload','caption','publish'];
+    return ['type','client','scriptstyle','shotstyle','platform-video','duration','assets','purpose','mood','model','prompt','result-upload','caption','publish'];
   }
   return ['type'];
 }
@@ -2456,25 +2405,6 @@ function akrRenderRail(){
   const steps = akrGetSteps();
   document.getElementById('akr-rail').innerHTML = steps.map((s,i)=>
     `<div class="rail-dot ${i<akrStepIdx?'done':''} ${i===akrStepIdx?'now':''}"></div>`).join('');
-}
-function akrSelectionsBar(){
-  const chips = [];
-  if(akrWz.type) chips.push(['Type', akrWz.type]);
-  if(akrWz.client) chips.push(['Client', akrWz.client]);
-  if(akrWz.style) chips.push(['Style', akrWz.style]);
-  if(akrWz.scriptStyle) chips.push(['Script style', akrWz.scriptStyle]);
-  if(akrWz.shotStyles && akrWz.shotStyles.length) chips.push(['Shots', akrWz.shotStyles.length + ' selected']);
-  if(akrWz.platform) chips.push(['Platform', akrWz.platform]);
-  if(akrWz.duration) chips.push(['Duration', akrWz.duration]);
-  if(akrWz.purpose) chips.push(['Purpose', akrWz.purpose]);
-  if(akrWz.mood) chips.push(['Mood', akrWz.mood]);
-  if(akrWz.character) { const m = AKRITI_MODELS.find(x=>x.id===akrWz.character); chips.push(['Model', m ? m.name : akrWz.character]); }
-  else if(akrWz.modelMode === 'upload') chips.push(['Model', 'Your own photo']);
-  else if(akrWz.modelMode === 'none') chips.push(['Model', 'No model']);
-  if(!chips.length) return '';
-  return `<div style="margin-bottom:16px;padding:10px 12px;background:var(--ink-2);border-radius:10px;display:flex;flex-wrap:wrap;gap:6px 10px">
-    ${chips.map(([k,v]) => `<span style="font-size:10.5px;color:var(--muted)"><b style="color:var(--gold)">${k}:</b> ${v}</span>`).join('')}
-  </div>`;
 }
 function akrFooter(nextDisabled, nextLabel){
   return `<div class="step-actions">
@@ -2557,33 +2487,9 @@ function akrRenderWizard(){
     const sel = akrWz.shotStyles || [];
     html = `<div class="step-eyebrow mono">${akrStepLabel()}</div>
       <div class="step-title display">Shot list</div>
-      <div class="step-sub">Pick every shot you want in this ${akrWz.type ? akrWz.type.toLowerCase() : 'video'} for ${akrWz.client || 'this business'}. Each one loads its own cinematography skill. Tap a shot's name to select it — tap "Details ▾" to see what photo to bring, how many, what background works best, and a one-line look note; you can attach the actual reference photos right there.</div>
+      <div class="step-sub">Pick every shot you want in this ${akrWz.type ? akrWz.type.toLowerCase() : 'video'} for ${akrWz.client || 'this business'}. Each one loads its own cinematography skill. Select as many as you need — they build the edit in order.</div>
       <div class="opt-grid" style="grid-template-columns:1fr">
-        ${list.map(s => {
-          const isSel = sel.includes(s.name);
-          const isOpen = akrWz.shotExpanded === s.name;
-          const esc = s.name.replace(/'/g,"\\'");
-          const card = akrOptCard(s.name, (isSel ? '✓ ' : '') + s.desc, isSel, `akrToggleShot('${esc}')`);
-          let detailBtn = '';
-          let panel = '';
-          if(s.photo){
-            detailBtn = `<button class="btn" style="margin:4px 0 10px 0;font-size:11px" onclick="akrToggleShotExpand('${esc}')">${isOpen ? 'Hide details ▴' : 'Details ▾'}</button>`;
-            if(isOpen){
-              const previews = (akrWz.shotRefPreviews && akrWz.shotRefPreviews[s.name]) || [];
-              const slots = previews.map((src,i) => `<div class="img-slot" style="cursor:default;position:relative"><img src="${src}"><span onclick="akrRemoveShotRef('${esc}',${i})" style="position:absolute;top:2px;right:2px;cursor:pointer;opacity:.7">✕</span></div>`).join('')
-                + (previews.length < 6 ? `<label class="img-slot" style="cursor:pointer">+<input type="file" accept="image/*" style="display:none" onchange="akrHandleShotRefUpload('${esc}', this.files[0])"></label>` : '');
-              panel = `<div class="note-box" style="margin:0 0 14px 0">
-                <div style="margin-bottom:6px"><b>Photo type:</b> ${s.photo.type}</div>
-                <div style="margin-bottom:6px"><b>How many images:</b> ${s.photo.count}</div>
-                <div style="margin-bottom:6px"><b>Background that works best:</b> ${s.photo.bg}</div>
-                <div style="margin-bottom:10px"><b>What the video will look like:</b> ${s.photo.note}</div>
-                <div style="font-size:10.5px;color:var(--muted);margin-bottom:6px">Drop the photo(s) for this shot here (or a short reference video/GIF works too):</div>
-                <div class="img-slots" style="grid-template-columns:repeat(6,1fr);max-width:420px">${slots}</div>
-              </div>`;
-            }
-          }
-          return card + detailBtn + panel;
-        }).join('')}
+        ${list.map(s => akrOptCard(s.name, (sel.includes(s.name) ? '✓ ' : '') + s.desc, sel.includes(s.name), `akrToggleShot('${s.name.replace(/'/g,"\\'")}')`)).join('')}
       </div>
       ${sel.length ? `<div class="note-box" style="margin-top:14px"><b>${sel.length} shot${sel.length>1?'s':''} selected.</b> Their cinematography skills will be written into the prompt as a numbered shot list.</div>` : ''}
       ${akrFooter(!sel.length)}`;
@@ -2761,11 +2667,7 @@ function akrRenderWizard(){
   else if(key === 'prompt'){
     const isVideoType = akrWz.type === 'Video' || akrWz.type === 'Reels';
     const isScriptType = akrWz.type === 'Script' || akrWz.type === 'Story';
-    const promptFp = akrPromptFingerprint();
-    if(!akrWz.prompt || akrWz._promptFp !== promptFp){
-      akrWz.prompt = isVideoType ? buildAkritiVideoPrompt() : (isScriptType ? buildAkritiScriptPrompt() : buildAkritiPhotoPrompt());
-      akrWz._promptFp = promptFp;
-    }
+    akrWz.prompt = akrWz.prompt || (isVideoType ? buildAkritiVideoPrompt() : (isScriptType ? buildAkritiScriptPrompt() : buildAkritiPhotoPrompt()));
     html = `<div class="step-eyebrow mono">${akrStepLabel()}</div>
       <div class="step-title display">Your prompt${isScriptType ? '' : ' pack'}</div>
       <div class="step-sub">${isScriptType ? 'Edit anything below, then copy it into Gemini or Claude yourself.' : `Edit anything below, then copy it or download the whole pack (prompt + reference ${isVideoType ? 'materials' : 'images'}) as one zip to paste into Gemini yourself.`}</div>
@@ -2776,7 +2678,7 @@ function akrRenderWizard(){
         ${isScriptType ? '' : '<button class="btn" onclick="downloadAkritiPack()">⬇ Download Pack (.zip)</button>'}
         <button class="btn primary" onclick="akrNextStep()">I ran it →</button>
       </div>
-      ${isScriptType ? '' : `<div class="note-box" style="margin-top:14px"><b>In the zip:</b> prompt.txt + style-dna-reference.txt (the locked photography style for this mood) + the character reference, background/style reference(s), lighting reference, and any photos you attached per shot on the shot list step — whichever of those you actually used, each shot's photos in their own subfolder — ready to drop into Gemini in one go.</div>`}`;
+      ${isScriptType ? '' : `<div class="note-box" style="margin-top:14px"><b>In the zip:</b> prompt.txt + style-dna-reference.txt (the locked photography style for this mood) + the character reference, background/style reference(s), and lighting reference — whichever of those you actually used — ready to drop into Gemini in one go.</div>`}`;
   }
 
   else if(key === 'result-upload'){
@@ -2908,15 +2810,11 @@ function akrRenderWizard(){
       fact = `Manually researched by the user on ${new Date().toISOString().slice(0,10)}: "${akrWz.trendChosen||''}". Treat as accurate but double-check anything time-sensitive before publishing.`;
     }
     const angleSkill = AKR_NEWS_ANGLE_SKILLS[akrWz.newsSubtopic];
-    const newsPromptFp = JSON.stringify({cat:akrWz.newsCat, format:akrWz.newsFormat, sub:akrWz.newsSubtopic, mode:akrWz.trendMode, chosen:akrWz.trendChosen});
-    if(!akrWz.newsPrompt || akrWz._newsPromptFp !== newsPromptFp){
-      akrWz.newsPrompt = template
-        .replace('__TOPIC__', topic)
-        .replace('__FACT__', fact)
-        .replace('__ANGLE__', akrWz.newsSubtopic)
-        + (angleSkill ? `\n\n===== LOADED SKILL =====\n${angleSkill}` : '');
-      akrWz._newsPromptFp = newsPromptFp;
-    }
+    akrWz.newsPrompt = akrWz.newsPrompt || (template
+      .replace('__TOPIC__', topic)
+      .replace('__FACT__', fact)
+      .replace('__ANGLE__', akrWz.newsSubtopic))
+      + (angleSkill ? `\n\n===== LOADED SKILL =====\n${angleSkill}` : '');
     html = `<div class="step-eyebrow mono">${akrStepLabel()}</div>
       <div class="step-title display">Prompt &amp; result</div>
       <div class="step-sub">This is the full ${akrWz.newsFormat} voice template — ${akrWz.newsFormat === 'Blog' ? 'MKBHD / Mrwhosetheboss / Linus Tech Tips synthesis' : 'Andrew Ng / Ben Thompson / Kara Swisher synthesis'} — with your topic dropped in. Copy it into Gemini or Claude, then paste what it gives you back below.</div>
@@ -2959,10 +2857,6 @@ function akrRenderWizard(){
       </div>`;
   }
 
-  const noBarSteps = ['type','saved-projects','demo-website'];
-  if(!noBarSteps.includes(key)){
-    html = akrSelectionsBar() + html;
-  }
   stage.innerHTML = html;
 }
 
